@@ -1,2 +1,3 @@
-# ac_lab_vmware
-lab.vmware Ansible Collection
+# Ansible Collection - lab.vmware
+
+Documentation for the collection.
