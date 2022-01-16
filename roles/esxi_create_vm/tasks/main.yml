@@ -9,6 +9,7 @@
     password: "{{ vcenter_password | mandatory }}"
     datacenter: "{{ vcenter_datacenter | mandatory }}"
     validate_certs: "{{ vcenter_validate_certs | default(no) }}"
+    template: "{{ vm_template | default(omit) }}"
     folder: "{{ vm_vcenter_path | default( vcenter_datacenter + '/' + (vm_folder | default('')) + '/vm' ) }}"
     name: "{{ vm_name | mandatory }}"
     state: "{{ vm_state | default('poweredon') }}"
@@ -23,7 +24,7 @@
       memory_reservation_lock: "{{ vm_memory_reservation | default(False) }}"
       mem_reservation: "{{ vm_memory_reservation_mb | default(vm_memory_mb) }}"
       num_cpus: "{{ vm_num_cpus | default(1) }}"
-      scsi: "{{ vm_scsi | optional }}"
+      scsi: "{{ vm_scsi | default(omit) }}"
     networks:
     - name: "{{ vm_network | default('VM Network') }}"
       device_type: "{{ vm_network_device | default('vmxnet3') }}"
