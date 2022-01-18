@@ -1,3 +1,4 @@
+- debug: var=vm_os
 - name: Create virtual machine (vcenter)
   delegate_to: localhost
   when:

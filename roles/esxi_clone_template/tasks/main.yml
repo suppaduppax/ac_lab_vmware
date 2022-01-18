@@ -8,19 +8,24 @@
   when:
     - vm_vcenter_managed is defined
     - vm_vcenter_managed == True
-  vmware_guest:
+  community.vmware.vmware_guest_cross_vc_clone:
     hostname: "{{ vcenter_hostname | mandatory }}"
     username: "{{ vcenter_username | mandatory }}"
     password: "{{ vcenter_password | mandatory }}"
-    datacenter: "{{ vcenter_datacenter | mandatory }}"
+    name: "{{ vm_template | mandatory }}"
     validate_certs: "{{ vcenter_validate_certs | default(False) }}"
-    template: "{{ vm_template | default(omit) }}"
-    folder: "{{ vm_vcenter_path | default( '/' + vcenter_datacenter + '/' + (vm_folder | default('')) + '/vm' ) }}"
-    name: "{{ vm_name | mandatory }}"
-    state: present #"{{ vm_state | default('present') }}"
-    esxi_hostname: "{{ esxi_hostname | mandatory }}"
-    guest_id: "{{ vm_os }}"
-    networks:
-    - name: "{{ vm_network | default('VM Network') }}"
-      device_type: "{{ vm_network_device | default('vmxnet3') }}"
+    destination_vcenter_validate_certs: "{{ vcenter_validate_certs | default(False) }}"
+    destination_vcenter: "{{ vcenter_hostname | mandatory }}"
+    destination_vcenter_username: "{{ vcenter_username | mandatory }}"
+    destination_vcenter_password: "{{ vcenter_password | mandatory }}"
+    destination_vcenter_port: '{{ vcenter_port | default(443) }}'
+    destination_vm_name: "{{ vm_name | mandatory }}"
+    destination_host: '{{ esxi_hostname | mandatory }}'
+    destination_datastore: '{{ vm_datastore | mandatory }}'
+    # {{ vm_vcenter_path | default( '/' + vcenter_datacenter + '/' + (vm_folder | default('')) + '/vm') }}"
+    # usual path of /datacenter/vm/vm_folder fails to find the folder
+    # having just vm_folder seems to work. perhaps its a bug
+    destination_vm_folder: "{{ vm_folder }}" 
+    state: "{{ vm_state | default('present') }}"
   register: deploy_vm
+
