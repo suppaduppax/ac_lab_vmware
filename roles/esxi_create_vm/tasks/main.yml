@@ -1,4 +1,3 @@
-- debug: var=vm_os
 - name: Create virtual machine (vcenter)
   delegate_to: localhost
   when:
@@ -37,13 +36,6 @@
         iso_path: "{{ vm_iso | mandatory }}"
   register: deploy_vm
 
-- name: Debug deployed vm
-  debug:
-    var: deploy_vm
-  when:
-    - vm_vcenter_managed is defined
-    - vm_vcenter_managed == True
-
 - name: Create virtual machine (esxi)
   when: vm_vcenter_managed | default(False) == False
   vmware_guest:
@@ -79,7 +71,8 @@
   register: deploy_vm
 
 - name: Debug deployed vm
-  when: vm_vcenter_managed | default(False) == False
+  when:
+    - create_vm_debug | default(False) == True
   debug:
     var: deploy_vm
 
